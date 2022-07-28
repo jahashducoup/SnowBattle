@@ -13,12 +13,12 @@ TagManager:
   - UI
   - 
   - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Ground
+  - Borders
+  - GroundElements
+  - Player
+  - PileOfSnowballs
+  - Snowballs
   - 
   - 
   - 
