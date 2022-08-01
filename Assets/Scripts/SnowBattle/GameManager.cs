@@ -140,7 +140,7 @@ public class GameManager : MonoBehaviour
             player4.GetComponent<PlayerMovement>().reloadKey = KeyCode.Alpha1;
             player4.GetComponent<PlayerMovement>().shootKey = KeyCode.Alpha2;
             player4.GetComponent<PlayerMovement>().crouchingKey = KeyCode.Alpha0;
-            teams = new List<List<GameObject>>{{new List<GameObject>{player1, player2}},{new List<GameObject>{player3, player4}}};
+            teams = new List<List<GameObject>>{{new List<GameObject>{player1, player3}},{new List<GameObject>{player2, player4}}};
         }
     }
 

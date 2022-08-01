@@ -10,8 +10,7 @@ public class TypeFadeInUI : MonoBehaviour
     private Color32 color;
     public float timeToAppear = 2f;
     public float timeBeforeStart = 0;
-    public AudioSource audioSource;
-    public AudioClip audioClip;
+
 
     // Start is called before the first frame update
     void Start()

@@ -33,6 +33,7 @@ public class PlayerMovement : MonoBehaviour
     private AudioSource audioSource;
     public AudioClip audioAmmoReload;
     private GameObject playerUI; 
+    public GameObject canvas;
 
     private Animator animator;
     private bool playerIsInSafeZone = false;
@@ -41,6 +42,8 @@ public class PlayerMovement : MonoBehaviour
     private bool youCanShoot = true;
     private bool outofAmmoCanPop = true;
     public int currentAmmoStock = AMMO_MAX;
+    public Sprite myHead;
+    public int playerNumber = 1;
 
     private bool isReloading = false;
     private float reloadingTime = RELOADINGTIME;
@@ -55,11 +58,16 @@ public class PlayerMovement : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        canvas = GameObject.Find("Canvas");
         audioSource = GetComponent<AudioSource>();
         body = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         myPlayerTag = transform.tag;
-        playerUI = Instantiate(myUI);
+        if(playerNumber == 1)  playerUI = Instantiate(myUI, new Vector2(-8.5f, 4.5f), Quaternion.identity, canvas.transform);
+        if(playerNumber == 2)  playerUI = Instantiate(myUI, new Vector2(8.5f, 4.5f), Quaternion.identity, canvas.transform);
+        if(playerNumber == 3)  playerUI = Instantiate(myUI, new Vector2(-8.5f, -4.5f), Quaternion.identity, canvas.transform);
+        if(playerNumber == 4)  playerUI = Instantiate(myUI, new Vector2(8.5f, -4.5f), Quaternion.identity, canvas.transform);
+
         playerUI.GetComponent<PlayerUI>().playerAttachedTo = gameObject;
     }
 

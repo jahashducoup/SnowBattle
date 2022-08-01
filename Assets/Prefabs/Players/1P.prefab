@@ -127,13 +127,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81e6b15737e2d7d42b18fdb9b78fe87e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  shootKey: 113
+  reloadKey: 101
+  crouchingKey: 99
   speed: 2.5
   snowballPrefab: {fileID: 7233776837187485297, guid: 3f95e38b1e113894382869b4cd2c4b33, type: 3}
   outOfAmmoIndicatorPrefab: {fileID: 4802531845004115344, guid: 592cca7199f82d44f9a324bce5164903, type: 3}
   loadingAmmoBar: {fileID: 2852521094106919380, guid: e9f76f4d9e995194fb027f642dd0e5ab, type: 3}
-  myUI: {fileID: 5972321365475708984, guid: ad55c2f7bc22e2c4a8e15816fb83f79e, type: 3}
+  myUI: {fileID: 3217599677169373054, guid: fc89c3ba106c256409c93fb6846677d2, type: 3}
   audioAmmoReload: {fileID: 8300000, guid: f41ec87ebd91dca48826aa1f863f0dc1, type: 3}
+  canvas: {fileID: 0}
   currentAmmoStock: 6
+  myHead: {fileID: 21300000, guid: bcd47a090e9b91d4db174d9245bad460, type: 3}
+  playerNumber: 1
+  youAreDead: 0
 --- !u!50 &6319357123903235302
 Rigidbody2D:
   serializedVersion: 4
