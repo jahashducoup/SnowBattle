@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class BounceSurface : MonoBehaviour
@@ -12,7 +10,12 @@ public class BounceSurface : MonoBehaviour
         if (ball != null)
         {
             Vector2 normal = collision.GetContact(0).normal;
-            ball.AddForce(-normal * this.bounceStrength);
+            Vector2 myCoord = new Vector2(ball._rigidbody.velocity.x, ball._rigidbody.velocity.y);
+            //Debug.Log(Mathf.Abs(Mathf.Atan2(normal.y-myCoord.y,normal.x-myCoord.x)*Mathf.Rad2Deg));
+            //Debug.Log(Vector2.Angle(normal, myCoord));
+            //ball.AddForce(-normal * this.bounceStrength);
+            //ball._rigidbody.velocity=new Vector2(ball._rigidbody.velocity.x*1.2f, ball._rigidbody.velocity.y * 1.2f);
+
         }
     }
 }
