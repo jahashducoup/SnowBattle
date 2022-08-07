@@ -3,7 +3,18 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Ground
+  - Border
+  - Projectile
+  - Player1
+  - Player2
+  - Player3
+  - Player4
+  - SafePlayer
+  - SafeZone
+  - Wall
+  - Reload
   layers:
   - Default
   - TransparentFX
@@ -19,8 +30,8 @@ TagManager:
   - Player
   - PileOfSnowballs
   - Snowballs
-  - 
-  - 
+  - Dialogs
+  - UI elements
   - 
   - 
   - 
@@ -40,4 +51,70 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Ground 1
+    uniqueID: 1392041939
+    locked: 0
+  - name: Ground 2
+    uniqueID: 1586115819
+    locked: 0
+  - name: Ground 3
+    uniqueID: 249007419
+    locked: 0
+  - name: Ground 4
+    uniqueID: 4149771595
+    locked: 0
+  - name: Ground 5
+    uniqueID: 290243413
+    locked: 0
+  - name: Walls 1
+    uniqueID: 3099925399
+    locked: 0
+  - name: Walls 2
+    uniqueID: 3887743493
+    locked: 0
+  - name: Walls 3
+    uniqueID: 3114603479
+    locked: 0
+  - name: Elements 1
+    uniqueID: 1123922991
+    locked: 0
+  - name: Elements 2
+    uniqueID: 3562336995
+    locked: 0
+  - name: Elements 3
+    uniqueID: 179017643
+    locked: 0
+  - name: Elements 4
+    uniqueID: 2267426833
+    locked: 0
+  - name: Players 1
+    uniqueID: 1839007055
+    locked: 0
+  - name: Players 2
+    uniqueID: 1099049729
+    locked: 0
+  - name: Players 3
+    uniqueID: 3076077735
+    locked: 0
+  - name: Players 4
+    uniqueID: 2497504639
+    locked: 0
+  - name: Projectiles 1
+    uniqueID: 4048592061
+    locked: 0
+  - name: Projectiles 2
+    uniqueID: 110725799
+    locked: 0
+  - name: WeatherEffects 1
+    uniqueID: 1549899679
+    locked: 0
+  - name: UI 1
+    uniqueID: 1810898437
+    locked: 0
+  - name: ParticlesUI
+    uniqueID: 1237188775
+    locked: 0
+  - name: UI 2
+    uniqueID: 154120935
     locked: 0

@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/SampleScene.unity
-    guid: 8c9cfa26abfee488c85f1582747f6a02
+    path: Assets/Scenes/Main screen.unity
+    guid: beba71e614f6b6145846881a41edf22b
+  - enabled: 1
+    path: Assets/Scenes/Game_SnowBattle.unity
+    guid: 1e6b32fc9ea6e7c409ecdd3ad5e36bd0
   m_configObjects: {}

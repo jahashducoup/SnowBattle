@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00952457eb6384e4e9c4daeb182dd033, type: 3}
+  m_Name: FirstPlayer
+  m_EditorClassIdentifier: 
+  mySprite: {fileID: 21300000, guid: d054a271e2578bc45abcdb70a82b7c98, type: 3}
+  stunAfterHitCd: 1
+  speed: 3
+  speedWhenCrouching: 1
+  shotCd: 0.8
+  outOfAmmoBoxCd: 3
+  reloadingDuration: 1
+  hp: 10
+  ammoMax: 6
+  shootKey: 113
+  reloadKey: 101
+  crouchingKey: 99
+  playerNumber: 1
+  myHead: {fileID: 21300000, guid: bcd47a090e9b91d4db174d9245bad460, type: 3}
+  animator: {fileID: 9100000, guid: bb24dc1ec8c07474799390466237feaa, type: 2}
