@@ -5,115 +5,95 @@ using Unity.VisualScripting;
 
 public class PlayerMovement : MonoBehaviour
 {
-    // Constants
-    private const float STUN_AFTER_HIT_CD = 1f;
-    private const float SPEED = 2.5f;
-    private const float SPEED_CROUCH = 1f;
-    private const float SHOT_CD = .8f;
-    private const int AMMO_MAX = 6;
-    private const float OUTOFAMMOBOX = 3f;
-    private const float RELOADINGTIME = 1f;
-    private const int HPMAX = 10;
+    // Prefabs
+    public GameObject   snowballPrefab;
+    public GameObject   loadingAmmoBarPrefab;
+    public GameObject   myUIPrefab;
+    public GameObject   outOfAmmoIndicatorPrefab;
+    public AudioClip    audioAmmoReloadPrefab;
 
-    //
 
-    public KeyCode shootKey = KeyCode.Q;
-    public KeyCode reloadKey = KeyCode.E;
-    public KeyCode crouchingKey = KeyCode.C;
+    // PlayerData variables
+    public  Sprite      mySprite;
+    private KeyCode     shootKey;
+    private KeyCode     reloadKey;
+    private KeyCode     crouchingKey;
+    public int          playerNumber;
+    public Sprite       myHead;
 
-    [SerializeField]
-    private float speed = SPEED;
-    private float outofAmmoCd = OUTOFAMMOBOX;
-    private Vector3 axisMovement;
-    private Rigidbody2D body;
-    public GameObject snowballPrefab;
-    public GameObject outOfAmmoIndicatorPrefab;
-    public GameObject loadingAmmoBar;
-    public GameObject myUI;
-    private AudioSource audioSource;
-    public AudioClip audioAmmoReload;
-    private GameObject playerUI; 
-    public GameObject canvas;
 
-    private Animator animator;
-    private bool playerIsInSafeZone = false;
-    private string myPlayerTag;
-    private float shotCd = SHOT_CD;
-    private bool youCanShoot = true;
-    private bool outofAmmoCanPop = true;
-    public int currentAmmoStock = AMMO_MAX;
-    public Sprite myHead;
-    public int playerNumber = 1;
+    // Variables that will grab a GameObject at Start()
+    private SpriteRenderer  spriteRenderer;
+    private Rigidbody2D     body;
+    private AudioSource     audioSource;
+    public GameObject       canvas;
+    private Animator        animator;
+    public PlayerData       playerData;
 
-    private bool isReloading = false;
-    private float reloadingTime = RELOADINGTIME;
-    private bool youCanReloadInArea = false;
-    private int currentHp = HPMAX;
-    public bool youAreDead = false;
 
-    //Hit
-    private bool gotHitBySnowball = false;
-    private float stunAfterHitCd = STUN_AFTER_HIT_CD;
+    // Variables that are setup at Start()
+    private float   speed;
+    private float   outofAmmoCd;
+    private bool    playerIsInSafeZone;
+    private float   shotCd;
+    private bool    youCanShoot;
+    private bool    outofAmmoCanPop;
+    public int      currentAmmoStock;
+    private bool    isReloading;
+    private float   reloadingTime;
+    private bool    youCanReloadInArea;
+    private int     currentHp;
+    public bool     youAreDead;
+    private bool    gotHitBySnowball;
+    private float   stunAfterHitCd;
+    private String  myPlayerTag; //Used to save playertag data
 
-    // Start is called before the first frame update
+
+    // Variables
+    private GameObject  playerUI; 
+    private Vector3     axisMovement;
+
+
     void Start()
     {
-        canvas = GameObject.Find("Canvas");
-        audioSource = GetComponent<AudioSource>();
-        body = GetComponent<Rigidbody2D>();
-        animator = GetComponent<Animator>();
-        myPlayerTag = transform.tag;
-        if(playerNumber == 1)  playerUI = Instantiate(myUI, new Vector2(-8.5f, 4.5f), Quaternion.identity, canvas.transform);
-        if(playerNumber == 2)  playerUI = Instantiate(myUI, new Vector2(8.5f, 4.5f), Quaternion.identity, canvas.transform);
-        if(playerNumber == 3)  playerUI = Instantiate(myUI, new Vector2(-8.5f, -4.5f), Quaternion.identity, canvas.transform);
-        if(playerNumber == 4)  playerUI = Instantiate(myUI, new Vector2(8.5f, -4.5f), Quaternion.identity, canvas.transform);
-
-        playerUI.GetComponent<PlayerUI>().playerAttachedTo = gameObject;
+        GrabGameObjectsAtStart();
+        TransferPlayerDataToVariable();
+        SetupVariablesAtStart();
+        InstantiatePlayerUI();
     }
 
-    // Update is called once per frame
+
     void Update()
     {
+
         // You dead
-        if (currentHp == 0)
-        {
-            youAreDead = true;
-        }
+        if (currentHp <= 0) youAreDead = true;
 
         if (youAreDead == true)
         {
-            axisMovement.x = 0;
-            axisMovement.y = 0;
-            Color myColor = GetComponent<SpriteRenderer>().color;
-            myColor.a = .5f;
-            GetComponent<SpriteRenderer>().color = myColor; 
-            return;
+            YouAreDeadMotherFucker();
+            return; // Prevent the player from doing anything else
         }
 
-        axisMovement.x = Input.GetAxisRaw("Horizontal" + gameObject.name.Split("(")[0]);
-        axisMovement.y = Input.GetAxisRaw("Vertical"  + gameObject.name.Split("(")[0]);
+        // Catch player movement inputs
+        axisMovement.x = Input.GetAxisRaw("Horizontal" + playerData.playerNumber + "P");
+        axisMovement.y = Input.GetAxisRaw("Vertical"  + playerData.playerNumber + "P");
 
+        // Can the player shoot? Then decrease the cooldown timer until he can shoot again
         if(youCanShoot == false)
         {
             shotCd -= Time.deltaTime;
-
-            if (shotCd < .1f)
-            {
-                youCanShoot = true;
-            }
+            if (shotCd <= .1f) youCanShoot = true;
         }     
         
+        // Can the OUTOFAMMO popup show? If no, then decrease the cooldown timer until it can pop again
         if(outofAmmoCanPop == false)
         {
             outofAmmoCd -= Time.deltaTime;
-
-            if (outofAmmoCd <= .1f)
-            {
-                outofAmmoCanPop = true;
-            }
+            if (outofAmmoCd <= .1f) outofAmmoCanPop = true;
         }    
 
-        // Touched by Snowball !
+        // Touched by Snowball ! Handle stun cooldown
         if(gotHitBySnowball == true)
         {
             stunAfterHitCd -= Time.deltaTime;
@@ -121,9 +101,9 @@ public class PlayerMovement : MonoBehaviour
 
             if(stunAfterHitCd <= .1f)
             {
-                stunAfterHitCd = STUN_AFTER_HIT_CD;
+                stunAfterHitCd = playerData.stunAfterHitCd;
                 gotHitBySnowball = false;
-                speed = SPEED;
+                speed = playerData.speed;
             }
         }
 
@@ -136,30 +116,35 @@ public class PlayerMovement : MonoBehaviour
             if(reloadingTime <= .1f)
             {
                 isReloading = false;
-                speed = SPEED;
+                speed = playerData.speed;
             }
         }
-        else
+
+        // You can do everything you want
+        else 
         {
             // Shoot !
             if (Input.GetKeyDown(shootKey))
             {
-                if(youCanShoot == true)
+                if(youCanShoot == true && gotHitBySnowball == false)
+                {
                     if(currentAmmoStock > 0)
                     {
                         // Throw a snowball
                         Shoot();
-                        shotCd = SHOT_CD;
+                        shotCd = playerData.shotCd;
                         youCanShoot = false;
                         currentAmmoStock -= 1;
                     }
                     else if(currentAmmoStock == 0 && outofAmmoCanPop == true)
                     {
+                        // Instantiate the OUTOFAMMO popup
                         GameObject outOfAmmoGObject = Instantiate(outOfAmmoIndicatorPrefab,  transform.position + new Vector3(transform.localScale.x*0.4f, 1f, 0f) , transform.rotation);
                         outOfAmmoGObject.GetComponent<InfoBox>().parent = gameObject;
                         outofAmmoCanPop = false;
-                        outofAmmoCd = OUTOFAMMOBOX;
+                        outofAmmoCd = playerData.outOfAmmoBoxCd;
                     }
+                }
             }
 
             // Reloading
@@ -167,13 +152,13 @@ public class PlayerMovement : MonoBehaviour
             {
                 if(isReloading == false)
                 {
-                    if (youCanReloadInArea == true && currentAmmoStock < AMMO_MAX)
+                    if (youCanReloadInArea == true && currentAmmoStock < playerData.ammoMax)
                     {
                         currentAmmoStock += 1;
-                        reloadingTime = STUN_AFTER_HIT_CD;
+                        reloadingTime = playerData.reloadingDuration;
                         isReloading = true;
-                        GameObject loadingAmmoGObject = Instantiate(loadingAmmoBar,  transform.position + new Vector3(0f, 1.3f, 0f) , transform.rotation);
-                        audioSource.PlayOneShot(audioAmmoReload);
+                        GameObject loadingAmmoGObject = Instantiate(loadingAmmoBarPrefab,  transform.position + new Vector3(0f, 1.3f, 0f) , transform.rotation);
+                        audioSource.PlayOneShot(audioAmmoReloadPrefab);
                     }
                 }
             }
@@ -182,27 +167,20 @@ public class PlayerMovement : MonoBehaviour
             if (Input.GetKeyDown(crouchingKey))
             {
                 animator.SetBool("isCrouching", true);
-                speed = SPEED_CROUCH;
-
-                if (playerIsInSafeZone == true)
-                {
-                    transform.tag = "SafePlayer";
-                }
+                speed = playerData.speedWhenCrouching;
+                if (playerIsInSafeZone == true) transform.tag = "SafePlayer";
             }
             
             // Uncrouching
             if (Input.GetKeyUp(crouchingKey))
             {
                 animator.SetBool("isCrouching", false);
-                speed = SPEED;
+                speed = playerData.speed;
                 transform.tag = myPlayerTag;
             }
         }
     }
 
-    /// <summary>
-    /// This function is called every fixed framerate frame, if the MonoBehaviour is enabled.
-    /// </summary>
     private void FixedUpdate()
     {
         Move();
@@ -238,11 +216,6 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Sent when another object enters a trigger collider attached to this
-    /// object (2D physics only).
-    /// </summary>
-    /// <param name="other">The other Collider2D involved in this collision.</param>
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.tag == "Projectile" 
@@ -269,11 +242,6 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Sent when another object leaves a trigger collider attached to
-    /// this object (2D physics only).
-    /// </summary>
-    /// <param name="other">The other Collider2D involved in this collision.</param>
     private void OnTriggerExit2D(Collider2D other)
     {
         if (other.tag == "SafeZone")
@@ -295,5 +263,64 @@ public class PlayerMovement : MonoBehaviour
         GetComponent<SpriteRenderer>().color = color;
         yield return new WaitForSeconds(0.10f);
         GetComponent<SpriteRenderer>().color = Color.white;
+    }
+
+    private void SetupVariablesAtStart()
+    {
+        playerIsInSafeZone      = false;
+        youCanShoot             = true;
+        outofAmmoCanPop         = true;
+        isReloading             = false;
+        youCanReloadInArea      = false;
+        youAreDead              = false;
+        gotHitBySnowball        = false;
+        transform.tag           = "Player" + playerData.playerNumber.ToString();
+        myPlayerTag             = transform.tag;
+    }
+
+    private void TransferPlayerDataToVariable()
+    {
+        spriteRenderer.sprite               = playerData.mySprite;
+        speed                               = playerData.speed;
+        outofAmmoCd                         = playerData.outOfAmmoBoxCd;
+        shotCd                              = playerData.shotCd;
+        currentAmmoStock                    = playerData.ammoMax;
+        reloadingTime                       = playerData.reloadingDuration;
+        currentHp                           = playerData.hp;
+        stunAfterHitCd                      = playerData.stunAfterHitCd;
+        shootKey                            = playerData.shootKey;
+        reloadKey                           = playerData.reloadKey;
+        crouchingKey                        = playerData.crouchingKey;
+        playerNumber                        = playerData.playerNumber;
+        myHead                              = playerData.myHead;
+        animator.runtimeAnimatorController  = playerData.animator;
+    }
+
+    private void GrabGameObjectsAtStart()
+    {
+        canvas          = GameObject.Find("Canvas");
+        audioSource     = GetComponent<AudioSource>();
+        body            = GetComponent<Rigidbody2D>();
+        animator        = GetComponent<Animator>();
+        spriteRenderer  = GetComponent<SpriteRenderer>();
+    }
+
+    private void InstantiatePlayerUI()
+    {
+        if(playerNumber == 1)  playerUI = Instantiate(myUIPrefab, new Vector2(-8.5f, 4.5f), Quaternion.identity, canvas.transform);
+        if(playerNumber == 2)  playerUI = Instantiate(myUIPrefab, new Vector2(8.5f, 4.5f), Quaternion.identity, canvas.transform);
+        if(playerNumber == 3)  playerUI = Instantiate(myUIPrefab, new Vector2(-8.5f, -4.5f), Quaternion.identity, canvas.transform);
+        if(playerNumber == 4)  playerUI = Instantiate(myUIPrefab, new Vector2(8.5f, -4.5f), Quaternion.identity, canvas.transform);
+
+        playerUI.GetComponent<PlayerUI>().playerAttachedTo = gameObject;
+    }
+
+    private void YouAreDeadMotherFucker()
+    {
+        axisMovement.x = 0;
+        axisMovement.y = 0;
+        Color myColor = GetComponent<SpriteRenderer>().color;
+        myColor.a = .5f;
+        GetComponent<SpriteRenderer>().color = myColor; 
     }
 }

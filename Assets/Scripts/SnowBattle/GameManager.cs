@@ -4,21 +4,24 @@ using System.Collections.Generic;
 using System.Data.SqlTypes;
 using System.Linq;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
     private bool weAreInPause = false;
     public int numberOfPlayers = 1;
+    public PlayerData player1ScriptableObject;
+    public PlayerData player2ScriptableObject;
+    public PlayerData player3ScriptableObject;
+    public PlayerData player4ScriptableObject;
     public GameObject canvas;
-    public GameObject playerPrefab1;
+    public GameObject playerPrefab;
     private GameObject player1;
-    public GameObject playerPrefab2;
     private GameObject player2;
-    public GameObject playerPrefab3;
     private GameObject player3;
-    public GameObject playerPrefab4;
     private GameObject player4;
     public GameObject squareMenuPrefab;
     private GameObject squareMenu;
@@ -30,18 +33,31 @@ public class GameManager : MonoBehaviour
     private GameObject leftTeamWon;
     public GameObject rightTeamWonPrefab;
     private GameObject rightTeamWon;
+    public GameObject retryPrefab;
+    private GameObject retry;
+    public MenuData menuData;
+    public GameObject quitPrefab;
+    private GameObject quit;
     private bool gameHasStarted = false;
+    private bool gameEnded = false;
     private List<List<GameObject>> teams;
-
 
 
     // Start is called before the first frame update
     void Start()
     {
+        numberOfPlayers = menuData.numberOfPlayers;
         squareMenu = Instantiate(squareMenuPrefab, canvas.transform);
         snowBattleTitle = Instantiate(snowBattleTitlePrefab, canvas.transform);
         rules = Instantiate(rulesPrefab, canvas.transform);
         rules.SetActive(false);
+        leftTeamWon = Instantiate(leftTeamWonPrefab, canvas.transform);
+        leftTeamWon.SetActive(false);
+        rightTeamWon = Instantiate(rightTeamWonPrefab, canvas.transform);
+        rightTeamWon.SetActive(false);
+        quit = Instantiate(quitPrefab, canvas.transform);
+        quit.SetActive(false);
+        quit.GetComponent<Button>().onClick.AddListener(Application.Quit);
         StartCoroutine(EnableMe(rules, 2f));
     }
 
@@ -50,33 +66,37 @@ public class GameManager : MonoBehaviour
     {
         if (gameHasStarted == true)
         {
-            // Echap mode
-            if(Input.GetKeyDown(KeyCode.Escape))
+            if(gameEnded == false)
             {
-                if (weAreInPause == false)
+                // Echap mode
+                if(Input.GetKeyDown(KeyCode.Escape))
                 {
-                    PauseGame();
-                    weAreInPause = true;
+                    if (weAreInPause == false)
+                    {
+                        PauseGame();
+                        weAreInPause = true;
+                    }
+                    else if (weAreInPause == true)
+                    {
+                        ResumeGame();
+                        weAreInPause = false;
+                    }
                 }
-                else if (weAreInPause == true)
+
+                if (teams != null)
                 {
-                    ResumeGame();
-                    weAreInPause = false;
+                    if (teams[0].LongCount(teamPlayer => teamPlayer.GetComponent<PlayerMovement>().youAreDead == true) == teams[0].Count)
+                    {
+                        RightTeamWonScreen();
+                        gameEnded = true;
+                    }
+                    if (teams[1].LongCount(teamPlayer => teamPlayer.GetComponent<PlayerMovement>().youAreDead == true) == teams[1].Count)
+                    {
+                        LeftTeamWonScreen();
+                        gameEnded = true;
+                    }
                 }
             }
-
-            if (teams != null)
-            {
-                if (teams[0].LongCount(teamPlayer => teamPlayer.GetComponent<PlayerMovement>().youAreDead == true) == teams[0].Count)
-                {
-                    RightTeamWonScreen();
-                }
-                if (teams[1].LongCount(teamPlayer => teamPlayer.GetComponent<PlayerMovement>().youAreDead == true) == teams[1].Count)
-                {
-                    LeftTeamWonScreen();
-                }
-            }
-
         }
         
 
@@ -93,6 +113,7 @@ public class GameManager : MonoBehaviour
                     squareMenu.SetActive(false);
                     snowBattleTitle.SetActive(false);
                     StartCoroutine(SpawnPlayers());
+                    gameObject.GetComponent<AudioSource>().enabled = true;
                     gameHasStarted = true;
                 }
             }
@@ -110,36 +131,40 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(3);
         if(numberOfPlayers == 1)
         {
-            player1 = Instantiate(playerPrefab1,  new Vector3(-7f, 0f, 0f) , Quaternion.identity);
+            player1 = Instantiate(playerPrefab,  new Vector3(-7f, 0f, 0f) , Quaternion.identity);
+            player1.GetComponent<PlayerMovement>().playerData = player1ScriptableObject;
+            player1.GetComponent<PlayerMovement>().playerData.playerNumber = 1;
         }
         else if(numberOfPlayers == 2)
         {
-            player1 = Instantiate(playerPrefab1,  new Vector3(-7f, 0f, 0f) , Quaternion.identity);
+            player1 = Instantiate(playerPrefab,  new Vector3(-7f, 0f, 0f) , Quaternion.identity);
+            player1.GetComponent<PlayerMovement>().playerData = player1ScriptableObject;
+            player1.GetComponent<PlayerMovement>().playerData.playerNumber = 1;
 
-            player2 = Instantiate(playerPrefab2,  new Vector3(7f, 0f, 0f) , Quaternion.identity);
-            player2.GetComponent<PlayerMovement>().reloadKey = KeyCode.Y;
-            player2.GetComponent<PlayerMovement>().shootKey = KeyCode.R;
-            player2.GetComponent<PlayerMovement>().crouchingKey = KeyCode.N;
+            player2 = Instantiate(playerPrefab,  new Vector3(7f, 0f, 0f) , Quaternion.identity);
+            player2.GetComponent<PlayerMovement>().playerData = player2ScriptableObject;
+            player2.GetComponent<PlayerMovement>().playerData.playerNumber = 2;
+
             teams = new List<List<GameObject>>{{new List<GameObject>{player1}},{new List<GameObject>{player2}}};
         }
         else if(numberOfPlayers == 4)
         {
-            player1 = Instantiate(playerPrefab1,  new Vector3(-7f, 1f, 0f) , Quaternion.identity);
+            player1 = Instantiate(playerPrefab,  new Vector3(-7f, 1f, 0f) , Quaternion.identity);
+            player1.GetComponent<PlayerMovement>().playerData = player1ScriptableObject;
+            player1.GetComponent<PlayerMovement>().playerData.playerNumber = 1;
 
-            player2 = Instantiate(playerPrefab2,  new Vector3(7f, 1f, 0f) , Quaternion.identity);
-            player2.GetComponent<PlayerMovement>().reloadKey = KeyCode.Y;
-            player2.GetComponent<PlayerMovement>().shootKey = KeyCode.R;
-            player2.GetComponent<PlayerMovement>().crouchingKey = KeyCode.N;
+            player2 = Instantiate(playerPrefab,  new Vector3(7f, 1f, 0f) , Quaternion.identity);
+            player2.GetComponent<PlayerMovement>().playerData = player2ScriptableObject;
+            player2.GetComponent<PlayerMovement>().playerData.playerNumber = 2;
 
-            player3 = Instantiate(playerPrefab3,  new Vector3(-7f, -1f, 0f) , Quaternion.identity);
-            player3.GetComponent<PlayerMovement>().reloadKey = KeyCode.O;
-            player3.GetComponent<PlayerMovement>().shootKey = KeyCode.U;
-            player3.GetComponent<PlayerMovement>().crouchingKey = KeyCode.Period;
+            player3 = Instantiate(playerPrefab,  new Vector3(-7f, -1f, 0f) , Quaternion.identity);
+            player3.GetComponent<PlayerMovement>().playerData = player3ScriptableObject;
+            player3.GetComponent<PlayerMovement>().playerData.playerNumber = 3;
 
-            player4 = Instantiate(playerPrefab4,  new Vector3(7f, -1f, 0f) , Quaternion.identity);
-            player4.GetComponent<PlayerMovement>().reloadKey = KeyCode.Alpha1;
-            player4.GetComponent<PlayerMovement>().shootKey = KeyCode.Alpha2;
-            player4.GetComponent<PlayerMovement>().crouchingKey = KeyCode.Alpha0;
+            player4 = Instantiate(playerPrefab,  new Vector3(7f, -1f, 0f) , Quaternion.identity);
+            player4.GetComponent<PlayerMovement>().playerData = player4ScriptableObject;
+            player4.GetComponent<PlayerMovement>().playerData.playerNumber = 4;
+
             teams = new List<List<GameObject>>{{new List<GameObject>{player1, player3}},{new List<GameObject>{player2, player4}}};
         }
     }
@@ -150,6 +175,8 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 0;
         squareMenu.SetActive(true);
         snowBattleTitle.SetActive(true);
+        quit.SetActive(true);
+        gameObject.GetComponent<AudioSource>().Pause();
     }
 
     private void ResumeGame()
@@ -157,6 +184,8 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 1;
         squareMenu.SetActive(false);
         snowBattleTitle.SetActive(false);
+        quit.SetActive(false);
+        gameObject.GetComponent<AudioSource>().UnPause();
     }
 
     private void LeftTeamWonScreen()
@@ -164,6 +193,8 @@ public class GameManager : MonoBehaviour
         PauseGame();
         squareMenu.SetActive(true);
         leftTeamWon.SetActive(true);
+        retry = Instantiate(retryPrefab, canvas.transform);
+        retry.GetComponent<Button>().onClick.AddListener(reloadScene);
     }
 
     private void RightTeamWonScreen()
@@ -171,8 +202,15 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 0;
         squareMenu.SetActive(true);
         rightTeamWon.SetActive(true);
+        retry = Instantiate(retryPrefab, canvas.transform);
+        retry.GetComponent<Button>().onClick.AddListener(reloadScene);
     }
 
-
+    public void reloadScene()
+    {
+        Time.timeScale = 1;
+        Scene scene = SceneManager.GetActiveScene();
+        SceneManager.LoadScene(scene.name);
+    }
 }
 

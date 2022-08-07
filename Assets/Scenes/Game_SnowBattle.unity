@@ -409,6 +409,7 @@ GameObject:
   m_Component:
   - component: {fileID: 316936990}
   - component: {fileID: 316936991}
+  - component: {fileID: 316936992}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -429,7 +430,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &316936991
 MonoBehaviour:
@@ -443,17 +444,117 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86bb1423724727440bda8360fe507cc0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  numberOfPlayers: 2
+  numberOfPlayers: 4
+  player1ScriptableObject: {fileID: 11400000, guid: 86a263f79d4f0734ab0bd0daf6418f6c, type: 2}
+  player2ScriptableObject: {fileID: 11400000, guid: 0626d80022bab6c4091bafdd7c3d8f36, type: 2}
+  player3ScriptableObject: {fileID: 11400000, guid: 4ec3feb023ee92d4cbff50c669d5af40, type: 2}
+  player4ScriptableObject: {fileID: 11400000, guid: e529f15edd35c3b41a46b68ab6c40d67, type: 2}
   canvas: {fileID: 1147378415}
-  playerPrefab1: {fileID: 2931826914050124169, guid: 48dd8960deee6ef4bb81b0df48ccdf5c, type: 3}
-  playerPrefab2: {fileID: 2931826914050124169, guid: 48dd8960deee6ef4bb81b0df48ccdf5c, type: 3}
-  playerPrefab3: {fileID: 2931826914050124169, guid: 48dd8960deee6ef4bb81b0df48ccdf5c, type: 3}
-  playerPrefab4: {fileID: 2931826914050124169, guid: 48dd8960deee6ef4bb81b0df48ccdf5c, type: 3}
+  playerPrefab: {fileID: 2931826914050124169, guid: 48dd8960deee6ef4bb81b0df48ccdf5c, type: 3}
   squareMenuPrefab: {fileID: 1704866044098159749, guid: 909e9a364f17567418f1f41c7d05a920, type: 3}
   rulesPrefab: {fileID: 8841458945639738458, guid: 749b2e58e51f8bb40a693efd2d4225a1, type: 3}
   snowBattleTitlePrefab: {fileID: 8963174623809641684, guid: 5879cb58bc033bd4e862e945cc934bfe, type: 3}
   leftTeamWonPrefab: {fileID: 550862266645799031, guid: 58e8a14cbd3e29e4bbefc54005f1902f, type: 3}
   rightTeamWonPrefab: {fileID: 3312059650202359478, guid: ebc5726c4d3aa384186c6120d2e06b0b, type: 3}
+  retryPrefab: {fileID: 2359834878694888537, guid: 9d96e04fcb3975d429bcb0789eb83c49, type: 3}
+  menuData: {fileID: 11400000, guid: 275593a6705c58247a3728f5ef5f1614, type: 2}
+  quitPrefab: {fileID: 3025134762441360236, guid: ebcb1c07b5058c64db9f1f25a6fec56a, type: 3}
+--- !u!82 &316936992
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 316936989}
+  m_Enabled: 0
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: f79244338774fee44b681ab260c8b9e4, type: 3}
+  m_PlayOnAwake: 1
+  m_Volume: 0.14
+  m_Pitch: 1
+  Loop: 1
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &340014155
 GameObject:
   m_ObjectHideFlags: 0
@@ -706,51 +807,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &629098743
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 629098745}
-  - component: {fileID: 629098744}
-  m_Layer: 0
-  m_Name: SnowBallMachineGun
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &629098744
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 629098743}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 83b1812de7515a9459288106b7689c01, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  snowballPrefab: {fileID: 7233776837187485297, guid: 3f95e38b1e113894382869b4cd2c4b33, type: 3}
---- !u!4 &629098745
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 629098743}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 6.93, y: 1.42, z: -0.2011582}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &956027130
 GameObject:
@@ -1013,7 +1069,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}

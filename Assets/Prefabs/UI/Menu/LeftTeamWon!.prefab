@@ -36,7 +36,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 960, y: 590}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 2000, y: 300}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &550862266645799029
@@ -150,5 +150,3 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   timeToAppear: 2
   timeBeforeStart: 0
-  audioSource: {fileID: 0}
-  audioClip: {fileID: 0}

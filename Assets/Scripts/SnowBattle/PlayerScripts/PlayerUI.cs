@@ -36,7 +36,10 @@ public class PlayerUI : MonoBehaviour
         if (playerAttachedTo.GetComponent<PlayerMovement>().playerNumber == 4) emplacementUI = UIEmplacement.BottomRight;
 
         //Display the head of the player
-        myHead = Instantiate(new GameObject(), gameObject.transform.position , Quaternion.identity, gameObject.transform);
+        myHead = new GameObject("myHead");
+        //myHead = Instantiate(new GameObject(), gameObject.transform.position , Quaternion.identity, gameObject.transform);
+        myHead.transform.position = gameObject.transform.position;
+        myHead.transform.parent = gameObject.transform;
         myHead.name = "myHead";
         myHead.layer = 15; // UI Elements
         myHead.AddComponent<SpriteRenderer>();
