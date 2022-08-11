@@ -5,7 +5,7 @@ Missed so much things when uploading the game.
 
 Keybindings (UK Keyboard, you need to rebind your keyboard with Windows+Space to play the game smoothly) :
 
-1P : WASD -> Move
+1P : WASD -> Move\n
      Q    -> Throw a snowball
      E    -> Reload next to the snow piles
      C    -> Crouch
